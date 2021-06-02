@@ -58,7 +58,9 @@ def logout():
 # cursos
 @app.route("/cursos", methods=["GET"])
 def cursos_index():
-    return "Aqui vemos los cursos"
+    #TODO: añadir filtro para que solo puedan acceder profesores
+    cursos = Curso.query.filter_by(id_profesor=current_user.id).all()
+    return render_template("cursos_index.html",cursos = cursos)
 
 @app.route("/cursos/create", methods=["GET", "POST"])
 def cursos_create():
@@ -67,8 +69,14 @@ def cursos_create():
         curso = Curso(name=form.name.data, id_profesor=current_user.id)
         db.session.add(curso)
         db.session.commit()
-        return "Entro"
-        
+        return redirect(url_for("cursos_index"))
     else:
         #pidiento el formulario
         return render_template("curso_create.html", form=form)
+
+@app.route("/cursos/destroy/{id:int}", methods=["GET"])
+def cursos_destroy(id):
+    # Revisar la bd si existe ese curso con ese id
+    # Eliminarlo de la base de datos
+    # Redireccionar a cursos create
+    pass
