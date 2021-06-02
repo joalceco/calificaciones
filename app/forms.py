@@ -14,3 +14,7 @@ class RegisterForm(FlaskForm):
     password=PasswordField("Password", validators=[DataRequired()])
     password_confirm=PasswordField("Confirma el password", validators=[DataRequired()])
     submit=SubmitField("Register")
+
+class CursoForm(FlaskForm):
+    name = StringField("Name of course", validators=[DataRequired()])
+    submit=SubmitField("Register course")
