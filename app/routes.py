@@ -74,9 +74,14 @@ def cursos_create():
         #pidiento el formulario
         return render_template("curso_create.html", form=form)
 
-@app.route("/cursos/destroy/{id:int}", methods=["GET"])
+@app.route("/cursos/destroy/<int:id>")
 def cursos_destroy(id):
     # Revisar la bd si existe ese curso con ese id
+    curso = Curso.query.filter_by(id=id).first()
     # Eliminarlo de la base de datos
+    # curso.delete()
+    db.session.delete(curso)
+    db.session.commit()
     # Redireccionar a cursos create
-    pass
+    return redirect(url_for("cursos_index"))
+    # return str(curso.name)

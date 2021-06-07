@@ -5,8 +5,17 @@
     <a href="{{url_for('cursos_create')}}">Crear un curso</a>
     <ul>
         {% for curso in cursos %}
-        <li>{{curso.name}}</li>
-        {{curso.id}}
+        <div class="row">
+            <div class="col">
+                <li>{{curso.name}}</li>
+            </div>
+            <div class="col">
+                <a href="{{ url_for('cursos_destroy', id=curso.id) }}"> Eliminar</a>
+            </div>
+            
+        </div>
+        
+        
         {% endfor %}
     </ul>
 {% endblock %}
