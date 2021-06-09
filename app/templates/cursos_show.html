@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>{{curso.name}}</h1>
+    <form action="{{url_for('cursos_alumnos_store', id_curso=curso.id)}}" method="post">
+        <input type="text" name="alumnos" id="" >
+        <input type="submit" value="Registrar Alumnos">
+    </form>
+    <div class="container">
+        <table class="table">
+            <thead class="thread-dark">
+                <tr>
+                    <th scope="col">Email</th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Apellido Paterno</th>
+                    <th scope="col">Apellido Materno</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for alumno in curso.alumnos %}
+                <tr>
+                    <td>{{alumno.email}}</td>
+                    <td>{{alumno.name}}</td>
+                    <td>{{alumno.apellido_paterno}}</td>
+                    <td>{{alumno.apellido_materno}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

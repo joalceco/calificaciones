@@ -1,8 +1,8 @@
 from app import app
-from flask import render_template, url_for, redirect
-from app.forms import LoginForm, RegisterForm, CursoForm
+from flask import render_template, url_for, redirect, request
+from app.forms import LoginForm, RegisterForm, CursoForm, TareaForm
 from flask_login import current_user, login_user, login_required, logout_user
-from app.models import User, Curso
+from app.models import User, Curso, Tarea
 from app import db
 
 @app.route("/")
@@ -62,6 +62,11 @@ def cursos_index():
     cursos = Curso.query.filter_by(id_profesor=current_user.id).all()
     return render_template("cursos_index.html",cursos = cursos)
 
+@app.route("/cursos/<int:id>")
+def cursos_show(id):
+    curso = Curso.query.filter_by(id=id).first()
+    return render_template("cursos_show.html", curso=curso)
+
 @app.route("/cursos/create", methods=["GET", "POST"])
 def cursos_create():
     form=CursoForm()
@@ -74,6 +79,28 @@ def cursos_create():
         #pidiento el formulario
         return render_template("curso_create.html", form=form)
 
+
+# <!-- cursos/<id>/alumnos/storecursos_alumnos_store-->
+@app.route("/cursos/<int:id_curso>/alumnos/store" , methods=["POST"])
+def cursos_alumnos_store(id_curso):
+    correos = request.form["alumnos"]
+    correos = correos.replace(" ", "")
+    correos = correos.split(",")
+    sadas = ""
+    curso = Curso.query.filter_by(id=id_curso).first()
+    for correo in correos: 
+        # Si el alumno ya esta inscrito saltar
+        alumno = User.query.filter_by(email=correo).first()
+        if alumno:
+            # if alumno ya inscrito no instcribir
+            curso.alumnos.append(alumno)
+        else:
+            #TODO: Flash con alumno no encontrado
+            pass
+    db.session.add(curso)
+    db.session.commit()
+    return redirect(url_for("cursos_show", id=id_curso))
+
 @app.route("/cursos/destroy/<int:id>")
 def cursos_destroy(id):
     # Revisar la bd si existe ese curso con ese id
@@ -85,3 +112,32 @@ def cursos_destroy(id):
     # Redireccionar a cursos create
     return redirect(url_for("cursos_index"))
     # return str(curso.name)
+
+
+# Tareas
+
+@app.route("/cursos/<int:id>/tareas/create",  methods=["GET", "POST"])
+def cursos_tareas_create(id):
+    curso = Curso.query.filter_by(id=id).first()
+    form = TareaForm()
+    if form.validate_on_submit():
+        # Post
+        tarea = Tarea()
+        tarea.titulo = form.titulo.data
+        tarea.id_curso = id
+        tarea.fecha_de_creacion = form.fecha_de_creacion.data
+        tarea.fecha_de_entrega = form.fecha_de_entrega.data
+        tarea.descripcion= form.descripcion.data
+        tarea.puntaje = form.puntos.data
+        db.session.add(tarea)
+        db.session.commit()
+        return redirect(url_for("cursos_tareas_index", id=id)) # TODO: Cambiar
+    else:
+        return render_template("cursos_tareas_create.html", curso=curso, form=form)
+
+
+@app.route("/cursos/<int:id>/tareas",  methods=["GET", "POST"])
+def cursos_tareas_index(id):
+    curso = Curso.query.filter_by(id=id).first()
+    tareas = Tarea.query.filter_by(id_curso=id)
+    return render_template("cursos_tareas_index.html", curso=curso, tareas=tareas)
