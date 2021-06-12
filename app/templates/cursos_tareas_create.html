@@ -2,5 +2,23 @@
 
 {% block content %}
     <h1>Tareas para el curso {{curso.name}}</h1>
-    
+    <form action="" method="post" novalidate>
+        {{ form.hidden_tag() }}
+        {{ form.titulo.label }}
+        {{ form.titulo(size=32) }}
+
+        {{ form.fecha_de_creacion.label }}
+        {{ form.fecha_de_creacion(size=32) }}
+
+        {{ form.fecha_de_entrega.label }}
+        {{ form.fecha_de_entrega(size=32) }}
+
+        {{ form.descripcion.label }}
+        {{ form.descripcion(size=32) }}
+
+        {{ form.puntos.label }}
+        {{ form.puntos(size=32) }}
+        
+        {{ form.submit() }}
+    </form>
 {% endblock %}
