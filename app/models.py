@@ -23,6 +23,10 @@ class User(UserMixin, db.Model):
     def check_password(self,password):
         return check_password_hash(self.password_hash, password)
 
+    def create_admin(self,password):
+        self.email="admin@admin.com"
+        self.set_password(password)
+
     def __repr__(self):
         return "Usuario: {}, email: {}".format(self.matricula, self.email)
 

@@ -8,3 +8,6 @@ class Config(object):
     else:
         SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'app.db')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    # if os.getenv("ADMIN_PASS"):
+    #     ADMIN_PASS = os.getenv("ADMIN_PASS")
+
