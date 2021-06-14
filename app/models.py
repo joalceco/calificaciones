@@ -9,6 +9,8 @@ class User(UserMixin, db.Model):
     name = db.Column(db.String(120))
     apellido_paterno = db.Column(db.String(120), index=True)
     apellido_materno = db.Column(db.String(120))
+    profesor = db.Column(db.Boolean, default=False)
+    admin = db.Column(db.Boolean, default=False)
     # Añadir telefono
     matricula=db.Column(db.String(10), index=True, unique=True)
     password_hash=db.Column(db.String(128))
@@ -44,6 +46,7 @@ class Tarea(db.Model):
     fecha_de_entrega = db.Column(db.DateTime)
     descripcion = db.Column(db.String(1500))
     puntaje = db.Column(db.Integer)
+    calificaciones = db.relationship('Calificaciones', backref='tarea', lazy=True)
 
 class Calificaciones(db.Model):
     id = db.Column(db.Integer, primary_key=True)

@@ -1,21 +1,63 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Cursos del profesor</h1>
-    <a href="{{url_for('cursos_create')}}">Crear un curso</a>
-    <ul>
-        {% for curso in cursos %}
-        <div class="row">
-            <div class="col">
-                <a href="{{url_for('cursos_show', id=curso.id)}}">{{curso.name}}</a>
-            </div>
-            <div class="col">
-                <a href="{{ url_for('cursos_destroy', id=curso.id) }}"> Eliminar</a>
-            </div>
-            
+    <div class="row mt-3">
+        <h1 class="col">Cursos</h1>
+    {% if current_user.profesor %}
+        <div class="col text-end mt-auto"><a class="btn btn-primary" href="{{url_for('cursos_create')}}">Crear un curso</a>    </div>
+    {% endif %}    
+    </div>
+    
+    {% if current_user.profesor %}
+        <h2>Cursos en los que eres profesor</h2>
+
+        <div class="container">
+            <table class="table">
+                <thead class="thread-dark">
+                    <tr>
+                        <th scope="col">Curso</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for curso in cursos %}
+                    <tr>
+                        <td><a href="{{url_for('cursos_show', id=curso.id)}}">{{curso.name}}</a></td>
+                        <td><a class="btn btn-danger" href="{{ url_for('cursos_destroy', id=curso.id) }}"> Eliminar</a></td>
+                    </tr>
+                    {% endfor %}
+                    
+                </tbody>
+            </table>
         </div>
-        
-        
-        {% endfor %}
+    {% endif %}
+
+    <h2>Cursos en los que eres estudiante</h2>
+    <div class="container">
+        <table class="table">
+            <thead class="thread-dark">
+                <tr>
+                    <th scope="col">Curso</th>
+                    <!-- <th scope="col"></th> -->
+                </tr>
+            </thead>
+            <tbody>
+                {% for curso in current_user.cursos_de_alumno %}
+                <tr>
+                    <td><a href="{{url_for('cursos_tareas_index', id=curso.id)}}">{{curso.name}}</a></td>
+                    <!-- <td><a class="btn btn-danger" href="{{ url_for('cursos_destroy', id=curso.id) }}"> Eliminar</a></td> -->
+                </tr>
+                {% endfor %}
+                
+            </tbody>
+        </table>
+    </div>
+
+
+
+
+    
+    <ul>
+
     </ul>
 {% endblock %}

@@ -1,0 +1,24 @@
+.spacerbar{
+    margin-left: 4px;
+    margin-right: 4px;
+}
+
+.form-min-input .bi{
+    font-size: 1.5rem;
+}
+
+.main-login::before{
+z-index: -100;
+content: "";
+position: absolute;
+height: 150vh;
+width: 100vw;
+top: 0%;
+right: 55%;
+background-image: linear-gradient(45deg,
+                #2692c8 0%,
+                #063992 100%);
+transform: translateY(-50%);
+border-radius: 70%;
+}
+

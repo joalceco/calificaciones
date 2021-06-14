@@ -3,10 +3,10 @@ from wtforms import StringField, PasswordField, BooleanField, SubmitField, DateT
 from wtforms.validators import DataRequired, Email
 
 class LoginForm(FlaskForm):
-    email=StringField("Email", validators=[DataRequired(), Email()])
-    password=PasswordField("Password", validators=[DataRequired()])
-    remember_me=BooleanField("Remember me")
-    submit=SubmitField("Sign In")
+    email=StringField("Correo electronico", validators=[DataRequired(), Email()])
+    password=PasswordField("Contraseña", validators=[DataRequired()])
+    remember_me=BooleanField("Recuerdame")
+    submit=SubmitField("Iniciar Sesión")
 
 
 class RegisterForm(FlaskForm):

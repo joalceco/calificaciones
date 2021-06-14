@@ -1,13 +1,17 @@
 from app import app
-from flask import render_template, url_for, redirect, request
+from flask import render_template, url_for, redirect, request, flash
 from app.forms import LoginForm, RegisterForm, CursoForm, TareaForm
 from flask_login import current_user, login_user, login_required, logout_user
 from app.models import User, Curso, Tarea, Calificaciones
 from app import db
 
 @app.route("/")
+@login_required
 def index():
-    return render_template("index.html")
+    if current_user.admin or current_user.profesor:
+        return render_template("index.html")
+    else:
+        return redirect(url_for("cursos_index"))
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -18,8 +22,7 @@ def login():
         email = form.email.data
         user = User.query.filter_by(email = email).first()
         if user is None or not user.check_password(form.password.data):
-            print("No estoy en la base datos o no es la contraseña")
-            # TODO: flash con el error.
+            flash("Correo o contraseña no validos")
             return redirect(url_for("login"))
         else:
             login_user(user, remember=form.remember_me.data)
@@ -44,7 +47,7 @@ def register():
             login_user(user, remember=True)
             return redirect(url_for("login"))
         else:
-            # TODO: flash "ya estas reguistrado"
+            # TODO: flash "ya estas reguistrado"-
             return redirect(url_for("index"))
     else:
         return render_template("register.html", form=form)
@@ -52,7 +55,7 @@ def register():
 @app.route("/logout")
 def logout():
     logout_user()
-    return redirect(url_for("index"))
+    return redirect(url_for("login"))
 
 # cursos
 @app.route("/cursos", methods=["GET"])
@@ -60,6 +63,7 @@ def logout():
 def cursos_index():
     #TODO: añadir filtro para que solo puedan acceder profesores
     cursos = Curso.query.filter_by(id_profesor=current_user.id).all()
+    # print(current_user.cursos_de_alumno)
     return render_template("cursos_index.html",cursos = cursos)
 
 
@@ -67,6 +71,7 @@ def cursos_index():
 @login_required
 def cursos_show(id):
     curso = Curso.query.filter_by(id=id).first()
+    
     return render_template("cursos_show.html", curso=curso)
 
 @app.route("/cursos/create", methods=["GET", "POST"])
@@ -109,10 +114,11 @@ def cursos_alumnos_store(id_curso):
 def cursos_destroy(id):
     # Revisar la bd si existe ese curso con ese id
     curso = Curso.query.filter_by(id=id).first()
-    # Eliminarlo de la base de datos
-    # curso.delete()
-    db.session.delete(curso)
-    db.session.commit()
+    if curso and curso.id_profesor == current_user.id:
+        db.session.delete(curso)
+        db.session.commit()
+    else:
+        flash("No tienes permisos para eliminar este recurso")
     # Redireccionar a cursos create
     return redirect(url_for("cursos_index"))
     # return str(curso.name)
@@ -145,11 +151,28 @@ def cursos_tareas_create(id):
 @login_required
 def cursos_tareas_index(id):
     curso = Curso.query.filter_by(id=id).first()
-    tareas = Tarea.query.filter_by(id_curso=id)
+    tareas = Tarea.query.filter_by(id_curso=id).all()
+    for tarea in tareas:
+        print(tarea.calificaciones.calificacion)
     return render_template("cursos_tareas_index.html", curso=curso, tareas=tareas)
 
 
 # Calificaicones
+
+@app.route("/cursos/<int:id>/tareas/calificaciones",  methods=["GET"])
+@login_required
+def cursos_tareas_calificaciones_index(id_curso):
+    curso = Curso.query.filter_by(id=id_curso).first()
+    calificaciones = Calificaciones.query.filter_by(id_tarea=id_tarea).all()
+    calificaciones_dict={}
+    for calificacion in calificaciones:
+        calificaciones_dict[calificacion.id_alumno] = calificacion.calificacion
+    print(calificaciones_dict)
+    return render_template("cursos_tareas_calificaciones_edit.html", 
+                            curso=curso, 
+                            tarea=tarea, 
+                            alumnos=curso.alumnos, 
+                            calificaciones=calificaciones_dict)
 
 # cursos_tareas_calificaciones_edit', id_curso=curso.id, id_tarea=tarea.id
 @app.route("/cursos/<int:id_curso>/tareas/<int:id_tarea>/edit",  methods=["GET"])

@@ -1,15 +1,44 @@
 {% extends "base.html" %}
 
-{% block content %}
-    <h1>Iniciar Sesión</h1>
-    <form action="" method="post" novalidate>
-        {{ form.hidden_tag() }}
-        {{ form.email.label }}
-        {{ form.email(size=32) }}
-        {{ form.password.label }}
-        {{ form.password(size=32) }}
-        {{ form.remember_me() }}
-        {{ form.submit() }}
+{% block nav %}
+    
+{% endblock nav %}
 
-    </form>
+{% block content %}
+    <!-- <h1>Iniciar Sesión</h1> -->
+    <div class="container mt-6 main-login mt-5">
+        <div class="row justify-content-center">
+        <div class="card col-md-6 col-lg-4">
+            <div class="card-body">
+                <h1 class="card-title">Iniciar Sesión</h1>
+                    <form action="" method="post" novalidate>
+                        {{ form.hidden_tag() }}
+                        <div class="mb-3">
+                            {{ form.email.label }}
+                            <div class="row form-min-input">
+                            <div class="col col-1 text-center"><i class="bi bi-person"></i></div>
+                            <div class="col">{{ form.email(size=32, class_="form-control ") }}</div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            {{ form.password.label }}
+                            <div class="row form-min-input">
+                            <div class="col col-1 text-center"><i class="bi bi-lock"></i></div>
+                            <div class="col">{{ form.password(size=32, class_="form-control ") }}</div>
+                            </div>
+                        </div>
+                        <div class="mb-3 form-check">
+                            {{ form.remember_me() }}
+                            <label class="form-check-label" for="remember_me">Recuerdame</label>
+                        </div>
+                        <div class="mb-3 text-end">
+                        {{ form.submit(class_="btn btn-primary") }}
+                        </div>
+                    </form>  
+                
+            </div>
+        </div>
+    </div>
+    </div>
+    
 {% endblock %}
