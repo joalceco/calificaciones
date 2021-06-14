@@ -1,1 +1,1 @@
-web: flask db upgrade; gunicorn calificaciones:app 
+web: flask db init; flask db upgrade; gunicorn calificaciones:app 
