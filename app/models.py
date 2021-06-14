@@ -27,15 +27,15 @@ class User(UserMixin, db.Model):
         return "Usuario: {}, email: {}".format(self.matricula, self.email)
 
 usuario_curso = db.Table("usuario_curso",
-    db.Column("id_user", db.Integer, db.ForeignKey("user.id"), primary_key=True),
-    db.Column("id_curso", db.Integer, db.ForeignKey("curso.id"), primary_key=True)
+    db.Column("id_user", db.Integer, db.ForeignKey("users.id"), primary_key=True),
+    db.Column("id_curso", db.Integer, db.ForeignKey("cursos.id"), primary_key=True)
     )
 
 class Curso(db.Model):
     __tablename__="cursos"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120))
-    id_profesor = db.Column(db.Integer, db.ForeignKey("user.id"))
+    id_profesor = db.Column(db.Integer, db.ForeignKey("users.id"))
     alumnos = db.relationship("User", secondary=usuario_curso, lazy="subquery", 
     backref=db.backref("cursos_de_alumno", lazy=True))
 
@@ -43,7 +43,7 @@ class Curso(db.Model):
 class Tarea(db.Model):
     __tablename__="tareas"
     id = db.Column(db.Integer, primary_key=True)
-    id_curso = db.Column(db.Integer, db.ForeignKey("curso.id"))
+    id_curso = db.Column(db.Integer, db.ForeignKey("cursos.id"))
     titulo = db.Column(db.String(150))
     fecha_de_creacion = db.Column(db.DateTime)
     fecha_de_entrega = db.Column(db.DateTime)
@@ -55,8 +55,8 @@ class Calificaciones(db.Model):
     __tablename__="calificaciones"
     id = db.Column(db.Integer, primary_key=True)
     # id_curso = db.Column(db.Integer, db.ForeignKey("curso.id"))
-    id_tarea = db.Column(db.Integer, db.ForeignKey("tarea.id"))
-    id_alumno = db.Column(db.Integer, db.ForeignKey("user.id"))
+    id_tarea = db.Column(db.Integer, db.ForeignKey("tareas.id"))
+    id_alumno = db.Column(db.Integer, db.ForeignKey("users.id"))
     calificacion = db.Column(db.Integer)
 
 @login.user_loader
