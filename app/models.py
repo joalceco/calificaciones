@@ -4,7 +4,7 @@ from flask_login import UserMixin
 from app import login
 
 class User(UserMixin, db.Model):
-    __tablename__=="users"
+    __tablename__="users"
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), index=True, unique=True)
     name = db.Column(db.String(120))
@@ -32,7 +32,7 @@ usuario_curso = db.Table("usuario_curso",
     )
 
 class Curso(db.Model):
-    __tablename__=="cursos"
+    __tablename__="cursos"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120))
     id_profesor = db.Column(db.Integer, db.ForeignKey("user.id"))
@@ -41,7 +41,7 @@ class Curso(db.Model):
 
 
 class Tarea(db.Model):
-    __tablename__=="tareas"
+    __tablename__="tareas"
     id = db.Column(db.Integer, primary_key=True)
     id_curso = db.Column(db.Integer, db.ForeignKey("curso.id"))
     titulo = db.Column(db.String(150))
@@ -52,7 +52,7 @@ class Tarea(db.Model):
     calificaciones = db.relationship('Calificaciones', backref='tarea', lazy=True)
 
 class Calificaciones(db.Model):
-    __tablename__=="calificaciones"
+    __tablename__="calificaciones"
     id = db.Column(db.Integer, primary_key=True)
     # id_curso = db.Column(db.Integer, db.ForeignKey("curso.id"))
     id_tarea = db.Column(db.Integer, db.ForeignKey("tarea.id"))
