@@ -11,12 +11,6 @@ db = SQLAlchemy(app)
 migrate = Migrate(app,db)
 login = LoginManager(app)
 login.login_view = 'login'
-# if app.config.get('ADMIN_PASS'):
-#     from app.models import User 
-#     if not User.query.filter_by(email="admin@admin.com").first():
-#         u = User()
-#         u.create_admin(app.config.get('ADMIN_PASS'))
-#         db.session.add(u)
-#         db.session.commit()
 
-from app import routes, models
+
+from app import routes, models, cli

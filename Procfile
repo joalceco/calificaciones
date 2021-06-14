@@ -1,1 +1,1 @@
-web: flask db init; flask db upgrade; gunicorn calificaciones:app 
+web: flask db upgrade; flask create-admin ;gunicorn calificaciones:app 
