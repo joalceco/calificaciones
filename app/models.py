@@ -25,6 +25,8 @@ class User(UserMixin, db.Model):
 
     def create_admin(self,password):
         self.email="admin@admin.com"
+        self.profesor=True
+        self.admin=True
         self.set_password(password)
 
     def __repr__(self):
